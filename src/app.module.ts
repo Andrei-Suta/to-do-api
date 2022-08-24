@@ -7,6 +7,7 @@ import { AppService } from "./app.service";
 import { Task } from "./task/task.entity";
 import { TaskModule } from "./task/task.module";
 import { User } from "./user/user.entity";
+import { UserModule } from "./user/user.module";
 
 @Module({
 	imports: [
@@ -26,6 +27,7 @@ import { User } from "./user/user.entity";
 			inject: [ConfigService],
 		}),
 		TaskModule,
+		UserModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
