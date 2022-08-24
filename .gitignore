@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+# build phase
+dist/
+
 # IDE
 /.idea
 /.awcache
