@@ -6,6 +6,8 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TaskEntity } from "./task/task.entity";
 import { TaskModule } from "./task/task.module";
+import { User } from "./user/user.enity";
+import { UserModule } from "./user/user.module";
 
 @Module({
 	imports: [
@@ -19,12 +21,13 @@ import { TaskModule } from "./task/task.module";
 				username: configService.get("POSTGRES_USER"),
 				password: configService.get("POSTGRES_PASSWORD"),
 				database: configService.get("POSTGRES_DATABASE"),
-				entities: [TaskEntity],
+				entities: [TaskEntity, User],
 				synchronize: true,
 			}),
 			inject: [ConfigService],
 		}),
 		TaskModule,
+		UserModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
