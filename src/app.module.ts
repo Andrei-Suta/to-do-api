@@ -24,7 +24,7 @@ import { TaskModule } from "./task/task.module";
 			}),
 			inject: [ConfigService],
 		}),
-		TaskModule,
+		TaskModule
 	],
 	controllers: [AppController],
 	providers: [AppService],
