@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { UserEntity } from "src/user/user.enity";
+import { User } from "src/user/user.enity";
 
 @Entity()
 export class TaskEntity {
@@ -20,6 +20,6 @@ export class TaskEntity {
 	@Column()
 	public isCompleted: boolean;
 
-	@ManyToOne(() => UserEntity, (user) => user.tasks)
-	public user: UserEntity;
+	@ManyToOne(() => User, (user) => user.tasks)
+	public user: User;
 }

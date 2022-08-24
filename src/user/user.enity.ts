@@ -4,16 +4,15 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TaskEntity } from "src/task/task.entity";
 
 @Entity()
-export class UserEntity {
+export class User {
 
 	@PrimaryGeneratedColumn()
 	public id!: number;
 
-	@Column({ type: "varchar", default: "" })
+	@Column({ type: "text", nullable: false })
 	public email: string;
 
-	@Exclude()
-	@Column({ type: "varchar", default: "" })
+	@Column({ type: "text", nullable: false })
 	public password: string;
 
 	@OneToMany(() => TaskEntity, (task) => task.user)
