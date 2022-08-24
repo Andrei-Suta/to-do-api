@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { User } from "src/user/user.entity";
 
@@ -8,18 +8,19 @@ export class Task {
 	@PrimaryGeneratedColumn()
 	public id: number;
 
-	@Column()
+	@Column({ type: "character varying", name: "title", nullable: false, default: "" })
 	public title: string;
 
-	@Column()
+	@Column({ type: "character varying", name: "description", nullable: false, default: "" })
 	public description: string;
 
-	@Column()
-	public is_completed: boolean;
+	@Column({ type: "boolean", name: "is_completed", nullable: false, default: false })
+	public isCompleted: boolean;
 
-	@Column()
-	public is_deleted: boolean;
+	@Column({ type: "boolean", name: "is_deleted", nullable: false, default: false })
+	public isDeleted: boolean;
 
 	@ManyToOne(() => User, (user: User) => user.tasks)
-	public user: User;
+	@JoinColumn({ name: "user_id", referencedColumnName: "id" })
+	public userId: User;
 }
