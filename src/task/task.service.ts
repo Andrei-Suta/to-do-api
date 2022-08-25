@@ -26,7 +26,8 @@ export class TaskService {
 	}
 
 	public async create(task: TaskDTO): Promise<TaskDTO> {
-		const taskEntity: Task = await this.taskRepository.save(this.taskRepository.create(await this.taskMapper.toEntity(task)));
+		const taskEntity: Task = await this.taskMapper.toEntity(task);
+		this.taskRepository.save(this.taskRepository.create(taskEntity));
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
