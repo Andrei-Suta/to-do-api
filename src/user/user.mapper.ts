@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 
 import { Task } from "src/task/task.entity";
-import { TaskMapper } from "src/task/task.mapper";
-import { TaskService } from "src/task/task.service";
+import { Repository } from "typeorm";
 import { UserDTO } from "./user.dto";
 import { User } from "./user.entity";
 
@@ -10,8 +10,8 @@ import { User } from "./user.entity";
 export class UserMapper {
 
 	public constructor(
-		private taskService: TaskService,
-		private taskMapper: TaskMapper,
+		@InjectRepository(Task)
+		private taskRepository: Repository<Task>
 	) { }
 
 	public toDTO(entity: User): UserDTO {
@@ -27,8 +27,8 @@ export class UserMapper {
 	public async toEntity(dto: UserDTO): Promise<User> {
 		const taskEntities: Task[] = [];
 		for (const id of dto.tasks) {
-			const taskEntity = await this.taskService.getById(id);
-			taskEntities.push(await this.taskMapper.toEntity(taskEntity));
+			const taskEntity: Task = await this.taskRepository.findOneBy({ id });
+			taskEntities.push(taskEntity);
 		}
 		const userEntity: User = {
 			id: dto.id,

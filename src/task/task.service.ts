@@ -12,27 +12,27 @@ export class TaskService {
 	public constructor(
 		@InjectRepository(Task)
 		private taskRepository: Repository<Task>,
-
 		private taskMapper: TaskMapper
 	) { }
 
 	public async getAll(): Promise<TaskDTO[]> {
-		const taskEntities = await this.taskRepository.find();
+		const taskEntities: Task[] = await this.taskRepository.find();
 		return this.taskMapper.toDTOs(taskEntities);
 	}
 
 	public async getById(id: number): Promise<TaskDTO> {
-		const taskEntity = await this.taskRepository.findOneBy({ id });
+		const taskEntity: Task = await this.taskRepository.findOneBy({ id });
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
-	public async create(task: TaskDTO): Promise<unknown> {
-		const taskEntity = await this.taskMapper.toEntity(task);
-		return this.taskRepository.save(this.taskRepository.create(taskEntity));
+	public async create(task: TaskDTO): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskRepository.save(this.taskRepository.create(await this.taskMapper.toEntity(task)));
+		return this.taskMapper.toDTO(taskEntity);
 	}
 
-	public async remove(id: number): Promise<void> {
-		await this.taskRepository.delete(id);
+	public async edit(task: TaskDTO): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskRepository.save(task);
+		return this.taskMapper.toDTO(taskEntity);
 	}
 
 }

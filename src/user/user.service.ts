@@ -16,7 +16,12 @@ export class UserService {
 	) { }
 
 	public async getById(id: number): Promise<UserDTO> {
-		const userEntity = await this.userRepository.findOneBy({ id });
+		const userEntity: User = await this.userRepository.findOneBy({ id });
+		return this.userMapper.toDTO(userEntity);
+	}
+
+	public async create(user: UserDTO): Promise<UserDTO> {
+		const userEntity: User = await this.userRepository.save(this.userRepository.create(await this.userMapper.toEntity(user)));
 		return this.userMapper.toDTO(userEntity);
 	}
 
