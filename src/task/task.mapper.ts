@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 import { User } from "src/user/user.entity";
-import { Repository } from "typeorm";
 import { TaskDTO } from "./task.dto";
 import { Task } from "./task.entity";
 
@@ -27,8 +27,8 @@ export class TaskMapper {
 	}
 
 	public async toEntity(dto: TaskDTO): Promise<Task> {
-		const id = dto.userId;
-		const user = await this.userRepository.findOneBy({ id });
+		const id: number = dto.userId;
+		const user: User = await this.userRepository.findOneBy({ id });
 		const taskEntity: Task = {
 			id: dto.id,
 			title: dto.title,
