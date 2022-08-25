@@ -7,6 +7,7 @@ import { User } from "src/user/user.entity";
 import { Repository } from "typeorm";
 import { AuthDTO } from "./auth.dto";
 import { ConfigService } from "@nestjs/config";
+import { jwtConstants } from "./jwt.constants";
 
 @Injectable()
 export class AuthService {
@@ -51,7 +52,6 @@ export class AuthService {
 			id: user.id,
 			email: user.email
 		};
-		return this.jwtService.sign(tokenDTO, { secret: this.configService.get("JWT_KEY") });
-		//, { secret: this.configService.get("JWT_KEY") }
+		return this.jwtService.sign(tokenDTO, { secret: jwtConstants.secret, expiresIn: jwtConstants.expire });
 	}
 }
