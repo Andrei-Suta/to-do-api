@@ -14,6 +14,6 @@ export class User {
 	@Column({ type: "character varying", name: "password", nullable: false, default: "" })
 	public password: string;
 
-	@OneToMany(() => Task, (task: Task) => task.user)
+	@OneToMany(() => Task, (task: Task) => task.user, { nullable: false, eager: true })
 	public tasks: Task[];
 }
