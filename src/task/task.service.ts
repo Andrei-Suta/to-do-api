@@ -25,14 +25,14 @@ export class TaskService {
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
-	public async create(task: TaskDTO): Promise<TaskDTO> {
-		const taskEntity: Task = await this.taskMapper.toEntity(task);
-		this.taskRepository.save(this.taskRepository.create(taskEntity));
+	public async create(taskDTO: TaskDTO): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskMapper.toEntity(taskDTO);
+		await this.taskRepository.save(taskEntity);
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
-	public async edit(task: TaskDTO): Promise<TaskDTO> {
-		const taskEntity: Task = await this.taskRepository.save(task);
+	public async edit(taskDTO: TaskDTO): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskRepository.save(taskDTO);
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
