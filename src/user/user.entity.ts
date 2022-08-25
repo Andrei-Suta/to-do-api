@@ -8,12 +8,12 @@ export class User {
 	@PrimaryGeneratedColumn()
 	public id: number;
 
-	@Column({ type: "character varying", name: "email", nullable: false, default: "" })
+	@Column({ type: "character varying", name: "email", unique: true, nullable: false, default: "" })
 	public email: string;
 
 	@Column({ type: "character varying", name: "password", nullable: false, default: "" })
 	public password: string;
 
-	@OneToMany(() => Task, (task: Task) => task.userId)
+	@OneToMany(() => Task, (task: Task) => task.user)
 	public tasks: Task[];
 }
