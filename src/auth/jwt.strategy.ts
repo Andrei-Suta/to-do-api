@@ -18,7 +18,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	private validate(payload: any): Promise<User | never> {
 		return this.userRepository.findOne({
 			where: { id: payload.id }
-		}
-		);
+		});
 	}
 }

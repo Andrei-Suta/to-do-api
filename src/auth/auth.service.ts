@@ -35,7 +35,7 @@ export class AuthService {
 		if (!user) {
 			throw new HttpException("No account registered with the provided email", HttpStatus.NOT_FOUND);
 		}
-		const isMatch = await bcrypt.compare(authDTO.password, user.password);
+		const isMatch: boolean = await bcrypt.compare(authDTO.password, user.password);
 		if (!isMatch) {
 			throw new HttpException("Wrong password", HttpStatus.NOT_FOUND);
 		}
