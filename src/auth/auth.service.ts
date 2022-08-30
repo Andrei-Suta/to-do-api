@@ -1,8 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { JwtService } from "@nestjs/jwt";
 import { Repository } from "typeorm";
-import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 
 import { User } from "src/user/user.entity";
@@ -15,7 +14,6 @@ export class AuthService {
 		@InjectRepository(User)
 		private usersRepository: Repository<User>,
 		private jwtService: JwtService,
-		private configService: ConfigService
 	) { }
 
 	public async register(authDto: AuthDTO): Promise<User | never> {
@@ -35,7 +33,7 @@ export class AuthService {
 		if (!user) {
 			throw new HttpException("No account registered with the provided email", HttpStatus.NOT_FOUND);
 		}
-		const isMatch: boolean = await bcrypt.compare(authDTO.password, user.password);
+		const isMatch: boolean = await this.verifyPassword(authDTO.password, user.password);
 		if (!isMatch) {
 			throw new HttpException("Wrong password", HttpStatus.NOT_FOUND);
 		}
@@ -47,11 +45,33 @@ export class AuthService {
 		return await bcrypt.hash(user.password, salt);
 	}
 
+	public async verifyPassword(firstPassword: string, secondPassword: string): Promise<boolean> {
+		return await bcrypt.compare(firstPassword, secondPassword);
+	}
+
 	public generateToken(user: User): string {
 		const tokenDTO = {
 			id: user.id,
 			email: user.email
 		};
 		return this.jwtService.sign(tokenDTO, { secret: jwtConstants.secret, expiresIn: jwtConstants.expire });
+	}
+
+	public async decodeToken(token: string): Promise<unknown> {
+		return this.jwtService.decode(token, null);
+	}
+
+	public async validateToken(token: string): Promise<User> {
+		const decoded: any = this.jwtService.verify(token);
+		if (!decoded) {
+			throw new HttpException("Forbidden", HttpStatus.FORBIDDEN);
+		}
+		const user: User = await this.usersRepository.findOne({
+			where: { id: decoded.id }
+		});
+		if (!user) {
+			throw new UnauthorizedException();
+		}
+		return user;
 	}
 }
