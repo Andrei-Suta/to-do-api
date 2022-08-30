@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Put, UseGuards } from "@nestjs/common";
+import { JwtGuard } from "src/auth/auth.guard";
 
 import { CurrentUser } from "src/auth/current-user.decorator";
 import { TaskDTO } from "./task.dto";
 import { TaskService } from "./task.service";
 
 @Controller("task")
+@UseGuards(JwtGuard)
 export class TaskController {
 
 	public constructor(private taskService: TaskService) { }
