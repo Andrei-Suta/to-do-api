@@ -21,7 +21,7 @@ export class TaskMapper {
 			description: entity.description,
 			isCompleted: entity.isCompleted,
 			isDeleted: entity.isDeleted,
-			userId: entity.user.id
+			userId: entity.user?.id
 		};
 		return taskDTO;
 	}

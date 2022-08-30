@@ -16,12 +16,20 @@ export class TaskService {
 	) { }
 
 	public async getAll(): Promise<TaskDTO[]> {
-		const taskEntities: Task[] = await this.taskRepository.find();
+		const taskEntities: Task[] = await this.taskRepository.find({
+			relations: ["user"]
+		});
+		taskEntities.sort((a: Task, b: Task) => b.id - a.id);
 		return this.taskMapper.toDTOs(taskEntities);
 	}
 
 	public async getById(id: number): Promise<TaskDTO> {
-		const taskEntity: Task = await this.taskRepository.findOneBy({ id });
+		const taskEntity: Task = await this.taskRepository.findOne({
+			where: {
+				id: id
+			},
+			relations: ["user"],
+		});
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
@@ -31,8 +39,38 @@ export class TaskService {
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
-	public async edit(taskDTO: TaskDTO): Promise<TaskDTO> {
-		const taskEntity: Task = await this.taskRepository.save(taskDTO);
+	public async edit(id: number, taskDTO: TaskDTO): Promise<TaskDTO> {
+		await this.taskRepository.update(id, taskDTO);
+		const taskEntity: Task = await this.taskRepository.findOne({
+			where: {
+				id: id
+			},
+			relations: ["user"],
+		});
+		return this.taskMapper.toDTO(taskEntity);
+	}
+
+	public async changeStatus(id: number): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskRepository.findOne({
+			where: {
+				id: id
+			},
+			relations: ["user"],
+		});
+		taskEntity.isCompleted = !taskEntity.isCompleted;
+		await this.taskRepository.save(taskEntity);
+		return this.taskMapper.toDTO(taskEntity);
+	}
+
+	public async delete(id: number): Promise<TaskDTO> {
+		const taskEntity: Task = await this.taskRepository.findOne({
+			where: {
+				id: id
+			},
+			relations: ["user"],
+		});
+		taskEntity.isDeleted = true;
+		await this.taskRepository.save(taskEntity);
 		return this.taskMapper.toDTO(taskEntity);
 	}
 
