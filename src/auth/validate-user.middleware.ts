@@ -17,7 +17,7 @@ export class ValidateUserMiddleware implements NestMiddleware {
 		}
 		const token: string = authorization.slice(7);
 		const userInfo = this.jwtService.decode(token);
-		req.user = userInfo; //userInfo = { id: 4, email: 'user4@email.com', iat: 1661844502, exp: 1661844562 }
+		req.body.user = userInfo;
 		next();
 	}
 }
